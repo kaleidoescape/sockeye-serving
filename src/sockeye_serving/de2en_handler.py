@@ -26,6 +26,7 @@ class SPMDecode():
         #i.e. split the line to eat the fake spaces, join tokens on 
         #spaces, and replace the space placeholder with a normal space
         result = ''.join(tokens.split()).replace("▁", " ")
+        result = result.strip()
         return result
 
 class De2EnHandler(SockeyeHandler):
