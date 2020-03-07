@@ -20,7 +20,7 @@ from sockeye.lexicon import TopKLexicon
 from sockeye.output_handler import get_output_handler
 from sockeye.utils import check_condition, log_basic_info, determine_context
 
-from .utils import decode_bytes, get_file_data, get_text, read_sockeye_args
+from .utils import decode_bytes, get_file_data, get_request, read_sockeye_args
 
 
 class SockeyeHandler(object):
@@ -182,7 +182,7 @@ class SockeyeHandler(object):
             if data:
                 text = decode_bytes(data)
             else:
-                text = get_text(req)
+                text = get_request(req)
 
             if text:
                 t = self.preprocessor.run(text['text'])

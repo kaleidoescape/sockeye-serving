@@ -4,18 +4,17 @@ import regex as re
 import sentencepiece as spm
 
 from .sockeye_handler import SockeyeHandler
-from .text_processor import JoshuaPreprocessor, Detokenizer
 
 BPE_MODEL = 'bpe.model'
 
-class SPMEncode(JoshuaPreprocessor):
+class SPMEncode():
     def __init__(self, model=None):
         if model is None:
             model = BPE_MODEL
         self.sp = spm.SentencePieceProcessor()
         self.sp.Load(model)
 
-    def run(self, string):
+    def run(self, string, start=False, end=False):
         result = self.sp.EncodeAsPieces(string)
         result = ' '.join(result)
         if start:
