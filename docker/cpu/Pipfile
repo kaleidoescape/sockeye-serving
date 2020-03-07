@@ -11,6 +11,7 @@ mxnet-model-server = "*"
 regex = "*"
 sockeye = ">=1.18.97"
 subword-nmt = "*"
+sentencepiece = "*"
 
 [requires]
 python_version = "3.6"

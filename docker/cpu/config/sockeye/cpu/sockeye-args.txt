@@ -1,0 +1,8 @@
+--models __placeholder__
+--beam-size 10
+--batch-size 1
+--chunk-size 1
+--disable-device-locking
+--output-type json
+--json-input
+--use-cpu

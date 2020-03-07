@@ -4,27 +4,41 @@ RUN useradd -m serving \
     && apt-get update \
     && apt-get install --no-install-recommends -y \
         build-essential \
-        python3-dev \
-        python3-pip \
+        python3 \
+	python3-dev \
+	python3-pip \
         openjdk-8-jdk-headless \
+        cmake \
+        pkg-config \
+        libgoogle-perftools-dev \
+        git \
     && rm -rf /var/lib/apt/lists/*
 
-USER serving
+RUN python3 -m pip install --upgrade pip setuptools wheel
 
-ENV HOME /home/serving
+RUN git clone https://github.com/google/sentencepiece.git
+
+RUN cd sentencepiece \
+    mkdir build \
+    cd build \
+    cmake .. \
+    make -j $(nproc) \
+    sudo make install \
+    sudo ldconfig -v
+RUN cd ..
+
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
 ENV PATH "$PATH:$HOME/.local/bin"
 ENV PYTHONUNBUFFERED TRUE
 
-WORKDIR $HOME
+COPY Pipfile . 
+COPY config/config.properties . 
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 
-COPY docker/cpu/Pipfile .
-RUN pip3 install --user -U pip pipenv \
-    && pipenv install
+RUN pip3 install pipenv psutil sentencepiece 
+RUN pipenv install
 
-COPY config/config.properties .
-COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 
 EXPOSE 8080 8081 8443 8444
 
