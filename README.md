@@ -1,4 +1,45 @@
-# sockeye-serving
+# sockeye-serving (prefix constraints)
+
+This repo was created for a hackathon event. USE THIS REPO AT YOUR OWN RISK.
+
+This repo builds off of jameswoo's sockeye-serving (see below for original instructions). This fixes some errors with using constraints (currently only the cpu Dockerfile is updated for these fixes). In addition, this uses a custom SentencePiece BPE model to encode/decode the sentence. 
+
+WARNING! This system is highly customized for a specific use case, and much of the code does not follow the principle of separation of concerns. We need to generalize much of the code, and to rewrite much of it. Cruciailly, the system enforces the inclusion of a start-of-sentence symbol in the constraints, requires the user to specific model files into specific directories, and requires the user to make specific config file updates so everything can build properly. 
+
+## Quickstart
+
+To build the Dockerfiles from scratch, you first need a sockeye model. Copy the model into the `docker/cpu` directory. Then copy the scripts inside `src/sockeye_serving` into the model directory (if they are not already there). 
+
+TODO: Automate this portion of the build process.
+
+```bash
+cp -r mymodel docker/cpu/models/
+cp -r src/sockeye_serving docker/cpu/models/mymodel/
+```
+
+Next, build the docker container, run it, and observe the logs:
+
+```bash
+cd docker/cpu
+docker build -t sockeye .
+docker run -itd --name sockeye -p 8090:8080 -p 8091:8081 sockeye
+docker logs sockeye -f
+```
+
+In a new terminal, register your model:
+```
+curl -X POST "http://localhost:8091/models?synchronous=true&initial_workers=1&url=de2en_vanilla"
+```
+
+Now you are ready to request prefix-constrained translations:
+
+```
+curl -X POST "http://localhost:8090/predictions/de2en" -H "Content-Type: application/json"     -d '{ "text": "Ich gehe zum Laden", "constraints": ["I walk"]}'
+```
+
+
+
+# sockeye-serving (original instructions)
 `sockeye-serving` is a containerized service for neural machine translation that uses Amazon's `sockeye` framework as the translation engine.
 The web server makes use of `mxnet-model-server`, which provides a management API for loading models and a prediction API for requesting translations.
 
