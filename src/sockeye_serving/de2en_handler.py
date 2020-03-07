@@ -17,7 +17,12 @@ class SPMEncode(JoshuaPreprocessor):
 
     def run(self, string):
         result = self.sp.EncodeAsPieces(string)
-        return ' '.join(result)
+        result = ' '.join(result)
+        if start:
+            result = '<s> ' + result
+        if end:
+            result = result + ' </s>'
+        return result
 
 class SPMDecode():
     def run(self, tokens):

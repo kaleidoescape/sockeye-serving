@@ -189,7 +189,9 @@ class SockeyeHandler(object):
                 constraints = []
                 if 'constraints' in text:
                     for c in text["constraints"]:
-                        c = self.preprocessor.run(c)
+                        #enfore prefix constraints
+                        #TODO separate these concerns!
+                        c = self.preprocessor.run(c, start=True)
                         constraints.append(c)
 
                 text['text'] = t
