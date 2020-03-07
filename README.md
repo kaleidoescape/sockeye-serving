@@ -37,6 +37,12 @@ Now you are ready to request prefix-constrained translations:
 curl -X POST "http://localhost:8090/predictions/de2en" -H "Content-Type: application/json"     -d '{ "text": "Ich gehe zum Laden", "constraints": ["I walk"]}'
 ```
 
+To rebuild (e.g. when you add new models to the models directory), right now you need to delete this docker image, and start over with the docker build step. You can check if you have containers running with `docker container ls -a`, and check if you have images with `docker images`.
+```
+docker rm sockeye -f
+docker rmi sockeye -f
+```
+
 
 
 # sockeye-serving (original instructions)
