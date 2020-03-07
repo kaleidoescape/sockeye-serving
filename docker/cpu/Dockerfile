@@ -1,7 +1,6 @@
 FROM ubuntu:18.04
 
-RUN useradd -m serving \
-    && apt-get update \
+RUN apt-get update \
     && apt-get install --no-install-recommends -y \
         build-essential \
         python3 \
@@ -35,6 +34,7 @@ ENV PYTHONUNBUFFERED TRUE
 COPY Pipfile . 
 COPY config/config.properties . 
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY models /opt/ml/model
 
 RUN pip3 install pipenv psutil sentencepiece 
 RUN pipenv install
